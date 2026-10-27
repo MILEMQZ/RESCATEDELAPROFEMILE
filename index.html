@@ -4,18 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Rescate de la profesora Milena</title>
-<!-- FUENTES: "Press Start 2P" (botones, puntajes, encabezados de ventanas) y "VT323" (preguntas y diálogos)
-     se cargan desde Google Fonts (licencia OFL) y necesitan conexión; sin conexión se usa la fuente alternativa
-     monoespaciada. El título, los nombres de los mundos y los avisos usan una fuente pixelada dibujada dentro de este
-     mismo archivo (funciona sin conexión). -->
+<!-- FUENTES: "Press Start 2P" y "VT323" se cargan desde Google Fonts (necesitan conexión); sin conexión se usa una fuente monoespaciada.
+     El título, los nombres de los mundos y los avisos usan una fuente pixelada dibujada dentro de este archivo. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0e1230;--card:#1c2552;--card2:#141b40;--line:#e0b84f;--gold:#ffd23f;--ok:#3ddc84;--bad:#ff6b6b;--tx:#fff;--fa:"Press Start 2P","Courier New",monospace;--fr:"VT323","Courier New",monospace;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}
-body{margin:0;min-height:100vh;color:var(--tx);font-family:var(--fr);font-size:1.4rem;line-height:1.2;background:var(--bg) radial-gradient(2px 2px at 20% 30%,#fff8,transparent),radial-gradient(2px 2px at 70% 20%,#fff8,transparent),radial-gradient(2px 2px at 40% 80%,#fff8,transparent),radial-gradient(2px 2px at 85% 65%,#ffd23faa,transparent);background-size:260px 260px}
+:root{--bg:#0e1230;--card:#1c2552;--card2:#141b40;--line:#e0b84f;--gold:#ffd23f;--ok:#3ddc84;--bad:#ff6b6b;--tx:#fff;--fa:"Press Start 2P","Courier New",monospace;--fr:"VT323","Courier New",monospace;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100vh;min-height:100dvh;color:var(--tx);font-family:var(--fr);font-size:1.4rem;line-height:1.2;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;overscroll-behavior:none;background:var(--bg) radial-gradient(2px 2px at 20% 30%,#fff8,transparent),radial-gradient(2px 2px at 70% 20%,#fff8,transparent),radial-gradient(2px 2px at 40% 80%,#fff8,transparent),radial-gradient(2px 2px at 85% 65%,#ffd23faa,transparent);background-size:260px 260px}
 #ttl{margin:8px 6px 4px}
 #ttl canvas,#vt canvas{display:block;margin:5px auto;max-width:100%;height:auto;image-rendering:pixelated}
 #wrap,#bar{width:100%;max-width:640px;margin:0 auto}
@@ -24,8 +22,11 @@ body{margin:0;min-height:100vh;color:var(--tx);font-family:var(--fr);font-size:1
 #nm{color:#fff;max-width:11ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ic{width:22px;height:22px;image-rendering:pixelated;flex:none;vertical-align:middle}
 .pt{width:64px;height:64px;image-rendering:pixelated;border:3px solid var(--line);flex:none;background:#2a3a78}
-canvas#cv{display:block;width:100%;height:auto;border:4px solid var(--line);box-shadow:4px 4px 0 #000;image-rendering:pixelated;background:#222}
-#dpad{display:grid;grid-template-columns:repeat(3,64px);grid-template-rows:repeat(2,56px);gap:6px;justify-content:center;margin:12px auto}
+canvas#cv{display:block;width:100%;height:auto;border:4px solid var(--line);box-shadow:4px 4px 0 #000;image-rendering:pixelated;background:#222;touch-action:none;cursor:pointer}
+/* Botones de flechas: ocultos en computador, visibles solo en pantallas táctiles */
+#dpad{display:none;grid-template-columns:repeat(3,72px);grid-template-rows:repeat(2,64px);gap:6px;justify-content:center;margin:12px auto}
+body.touch #dpad{display:grid}
+@media (hover:none) and (pointer:coarse){#dpad{display:grid}}
 #dpad button{border:3px solid var(--line);background:var(--card);border-radius:0;box-shadow:3px 3px 0 #000;touch-action:none;padding:0}
 #dpad button:active{background:#37508a;transform:translate(2px,2px);box-shadow:1px 1px 0 #000}
 #dpad .u{grid-column:2}
@@ -35,23 +36,36 @@ canvas#cv{display:block;width:100%;height:auto;border:4px solid var(--line);box-
 .ar.l{border-left:0;border-right:18px solid var(--gold)}
 .ar.r{border-right:0;border-left:18px solid var(--gold)}
 .help{text-align:center;font-size:1.2rem;opacity:.9;margin:0 10px 14px}
-#ov{position:fixed;inset:0;background:rgba(6,10,28,.9);display:none;align-items:center;justify-content:center;padding:12px;z-index:5;overflow:auto}
-.box{background:var(--card);border:4px solid var(--line);box-shadow:6px 6px 0 #000;padding:16px;max-width:560px;width:100%;max-height:96vh;overflow:auto}
+.ht{display:none}
+body.touch .ht{display:inline}
+body.touch .hp{display:none}
+@media (hover:none) and (pointer:coarse){.ht{display:inline}.hp{display:none}}
+@media (min-width:900px){#wrap,#bar{max-width:800px}.help{font-size:1.4rem}}
+/* Celular en horizontal: el mapa ocupa el alto disponible y las flechas flotan sobre la esquina */
+@media (orientation:landscape) and (max-height:520px){
+  #ttl,.help{display:none}
+  #bar{margin:6px auto}
+  #wrap{max-width:min(640px,calc((100dvh - 70px)*1.4286))}
+  #dpad{grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,50px);gap:4px}
+  body.touch #dpad,#dpad{position:fixed;left:calc(10px + env(safe-area-inset-left,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px));margin:0;opacity:.85;z-index:3}
+}
+#ov{position:fixed;inset:0;background:rgba(6,10,28,.9);display:none;align-items:center;justify-content:center;padding:12px;z-index:5;overflow:auto;-webkit-overflow-scrolling:touch}
+.box{background:var(--card);border:4px solid var(--line);box-shadow:6px 6px 0 #000;padding:16px;max-width:560px;width:100%;max-height:96vh;max-height:96dvh;overflow:auto}
 .hd{display:flex;gap:12px;align-items:center;margin-bottom:10px}
 .hd h2,.box h2{font-family:var(--fa);font-size:.8rem;line-height:1.6;color:var(--gold);margin:0}
 .th,.tx{padding:8px 10px;font-size:1.3rem;line-height:1.2;margin:8px 0}
 .th{background:#16264a;border-left:6px solid var(--gold)}
 .tx{background:#2b1f4a;border-left:6px solid #b28dff}
 .q{font-size:1.65rem;line-height:1.1;margin:12px 0;color:#fff}
-.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:10px 12px;font-family:var(--fr);font-size:1.5rem;line-height:1.1;color:var(--tx);background:#2d4a85;border:3px solid var(--line);border-radius:0;box-shadow:3px 3px 0 #000;cursor:pointer;overflow-wrap:anywhere}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px;min-height:48px;font-family:var(--fr);font-size:1.5rem;line-height:1.1;color:var(--tx);background:#2d4a85;border:3px solid var(--line);border-radius:0;box-shadow:3px 3px 0 #000;cursor:pointer;overflow-wrap:anywhere}
 .opt:hover:not(:disabled){background:#3d62ad}
 .opt:disabled{opacity:.55;cursor:default}
 .opt.ok{background:#1f8f4e;border-color:var(--ok);opacity:1}
-.opt.no{background:#8f2a2a;border-color:var(--bad)}
+.opt.no{background:#8f2a2a;border-color:var(--bad);opacity:1}
 .fb{min-height:1.5em;font-size:1.5rem;margin-top:6px}
-.go{display:block;margin:14px auto 0;padding:12px 16px;max-width:100%;font-family:var(--fa);font-size:.7rem;line-height:1.5;white-space:normal;background:var(--gold);color:#241a00;border:3px solid #000;border-radius:0;box-shadow:4px 4px 0 #8a6a00;cursor:pointer}
+.go{display:block;margin:14px auto 0;padding:14px 16px;min-height:48px;max-width:100%;font-family:var(--fa);font-size:.7rem;line-height:1.5;white-space:normal;background:var(--gold);color:#241a00;border:3px solid #000;border-radius:0;box-shadow:4px 4px 0 #8a6a00;cursor:pointer}
 .go:active{transform:translate(2px,2px);box-shadow:2px 2px 0 #8a6a00}
-input{width:100%;padding:10px;font-family:var(--fr);font-size:1.7rem;border:3px solid var(--line);border-radius:0;background:#16264a;color:var(--tx);margin:6px 0}
+input{width:100%;padding:10px;font-family:var(--fr);font-size:1.7rem;border:3px solid var(--line);border-radius:0;background:#16264a;color:var(--tx);margin:6px 0;-webkit-user-select:text;user-select:text}
 label{font-size:1.4rem}
 ol{margin:8px 0 0;padding-left:30px;font-family:var(--fa);font-size:.6rem;line-height:2.2}
 .sm{font-size:1.1rem;opacity:.8}
@@ -73,7 +87,7 @@ ol{margin:8px 0 0;padding-left:30px;font-family:var(--fa);font-size:.6rem;line-h
   <button data-d="0,1" aria-label="Abajo" style="grid-row:2"><i class="ar d"></i></button>
   <button data-d="1,0" aria-label="Derecha" style="grid-row:2"><i class="ar r"></i></button>
 </div>
-<p class="help">Muévete con las flechas, WASD o los botones. Camina contra los personajes para hablar, contra los sellos para responder preguntas y contra las puertas para viajar.</p>
+<p class="help"><span class="hp">Muévete con las flechas del teclado o WASD, o haz clic en el mapa. Camina contra los personajes para hablar, contra los sellos para responder preguntas y contra las puertas para viajar.</span><span class="ht">Toca el mapa o usa los botones para moverte. Camina contra los personajes para hablar, contra los sellos para responder preguntas y contra las puertas para viajar.</span></p>
 <div id="ov"><div class="box" id="bx"></div></div>
 
 <script>
@@ -145,7 +159,7 @@ const cases=[[1,2,3],[4,5,6],[7,8,9]],WN=["Bosque de los Lugares","Ruinas del Mi
 const cv=document.getElementById("cv"),cx=cv.getContext("2d"),ov=document.getElementById("ov"),bx=document.getElementById("bx");
 const bg=document.createElement("canvas");bg.width=640;bg.height=448;const bc=bg.getContext("2d");
 const $=id=>document.getElementById(id);
-let where="h",wd=0,px=10,py=10,rx=10,ry=10,face="d",ph=0,walk=false,cool=0,held=null,key=null,ban=null;
+let where="h",wd=0,px=10,py=10,rx=10,ry=10,face="d",ph=0,walk=false,cool=0,held=null,key=null,ban=null,tgt=null;
 let score=0,name="Detective",done={},crys={},open=0,busy=true,toast="",tt=0;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const lb=()=>{try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}};
@@ -287,14 +301,14 @@ function hud(){
   $("nm").textContent=name;$("pts").textContent=score;$("pl").textContent=ncr();$("rk").textContent=r;$("rt").textContent=a.length+1;
 }
 function say(t){toast=t;clearTimeout(tt);tt=setTimeout(()=>{toast=""},2800)}
-function show(h){held=null;bx.innerHTML=h;ov.style.display="flex";busy=true;paintIcons(bx)}
+function show(h){held=null;tgt=null;bx.innerHTML=h;ov.style.display="flex";busy=true;paintIcons(bx)}
 function hide(){ov.style.display="none";busy=false;cool=Date.now()+450}
 const hdr=(k,t)=>`<div class="hd"><canvas class="pt" data-k="${k}" width="32" height="32"></canvas><h2>${t}</h2></div>`;
 function dlg(k,t,txt,btn,cb){
   show(hdr(k,t)+`<div class="tx">${txt}</div><button class="go" id="dgo">${btn||"Entendido"}</button>`);
   $("dgo").onclick=()=>{hide();if(cb)cb()};
 }
-function go(w,x,y,n){where=w;px=rx=x;py=ry=y;drawMap();ban={t:n,u:Date.now()+3200}}
+function go(w,x,y,n){where=w;px=rx=x;py=ry=y;tgt=null;drawMap();ban={t:n,u:Date.now()+3200}}
 
 function mv(dx,dy){
   if(busy||Date.now()<cool)return;
@@ -321,7 +335,7 @@ function inter(c,x,y){
 }
 function start(){
   show(hdr("siren","¡Tenemos un caso urgente!")+`
-  <div class="tx">El Guardián del Olvido secuestró a la profesora Milena y se llevó los lugares de las historias. Para rescatarla debes recorrer 3 mundos, romper sellos respondiendo preguntas sobre el espacio narrativo, el tiempo de los hechos y el tiempo de la narración, y conseguir 3 cristales.</div>
+  <div class="tx">El Guardián del Olvido secuestró a la profesora Milena y se llevó los lugares de las historias. Para rescatarla debes recorrer 3 mundos, romper sellos respondiendo preguntas sobre el espacio narrativo, el tiempo de los hechos y el tiempo de la narración, y conseguir 3 cristales. Cada sello se rompe con 5 aciertos: si fallas, verás la respuesta correcta y vendrá una pregunta nueva. ¡Sigue aprendiendo hasta llegar a los cristales!</div>
   <label for="nin">Escribe tu nombre, detective:</label>
   <input id="nin" maxlength="14" placeholder="Tu nombre" autocomplete="off">
   <button class="go" id="gob">¡Comenzar la misión!</button>
@@ -330,32 +344,42 @@ function start(){
   $("nin").onkeydown=e=>{if(e.key=="Enter")$("gob").click()};
 }
 const OKS=["¡Excelente, detective!","¡Muy bien, sigue así!","¡Pista resuelta!","¡Gran observación!","¡Sello roto!"];
-function quiz(id,i=0,it){
-  if(!it){
-    if(id<=8){const m=MS[id-1];it=m[4].map(q=>({q:q.split("|"),f:m[3],h:m[2]}));it.t=m[1]}
-    else{const a=[];MS.forEach(m=>m[4].forEach(q=>a.push({q:q.split("|"),f:m[3],h:m[2]})));a.sort(()=>Math.random()-.5);it=a.slice(0,5);it.t=id==9?"Sello 9: Reto de repaso":"Prueba del Guardián"}
+/* Sin segundas oportunidades: si fallas, ves la respuesta correcta y llega una pregunta NUEVA.
+   Cada sello se rompe con 5 aciertos; las preguntas de reemplazo salen de sellos del mismo tema. */
+const shuf=a=>a.sort(()=>Math.random()-.5);
+const mkQ=m=>m[4].map(q=>({q:q.split("|"),f:m[3],h:m[2]}));
+function quiz(id,st){
+  if(!st){
+    let own,extra;
+    if(id<=8){own=mkQ(MS[id-1]);extra=shuf((id<=6?[0,1,2,3,4,5]:[6,7]).filter(k=>k!=id-1).flatMap(k=>mkQ(MS[k])))}
+    else{const a=shuf(MS.flatMap(mkQ));own=a.slice(0,5);extra=a.slice(5)}
+    st={id,t:id<=8?MS[id-1][1]:id==9?"Sello 9: Reto de repaso":"Prueba del Guardián",q:own.concat(extra),n:0,ok:0};
   }
-  const d=it[i].q,t={t:0};
-  const o=[[d[1],1],[d[2],0],[d[3],0]].sort(()=>Math.random()-.5);
-  show(hdr(id==10?"guardian":id==9?"star":"lock",it.t)+`
-  <div class="th">${icH("lupa")} <b>Archivo secreto:</b> ${it[i].h}</div>
-  <div class="tx">${icH("scroll")} ${it[i].f}</div>
-  <div class="q">Pregunta ${i+1} de 5: ${esc(d[0])}</div>
+  if(st.n>=st.q.length)st.q=st.q.concat(shuf(MS.flatMap(mkQ)));
+  const it=st.q[st.n],d=it.q,o=shuf([[d[1],1],[d[2],0],[d[3],0]]);
+  show(hdr(id==10?"guardian":id==9?"star":"lock",st.t)+`
+  <div class="th">${icH("lupa")} <b>Archivo secreto:</b> ${it.h}</div>
+  <div class="tx">${icH("scroll")} ${it.f}</div>
+  <div class="q">Acierto ${st.ok+1} de 5: ${esc(d[0])}</div>
   ${o.map((x,k)=>`<button class="opt" data-k="${k}">${esc(x[0])}</button>`).join("")}
   <div class="fb" id="fb" role="status"></div>`);
   bx.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
-    if(o[b.dataset.k][1]){
-      score+=t.t?50:100;hud();
-      bx.querySelectorAll(".opt").forEach(x=>x.disabled=true);b.classList.add("ok");
-      $("fb").textContent=OKS[i];$("fb").style.color="var(--ok)";
+    const good=o[b.dataset.k][1];
+    bx.querySelectorAll(".opt").forEach((x,k)=>{x.disabled=true;if(o[k][1])x.classList.add("ok")});
+    st.n++;
+    if(good){
+      score+=100;st.ok++;hud();
+      $("fb").textContent=OKS[st.ok-1];$("fb").style.color="var(--ok)";
       setTimeout(()=>{
-        if(i<4)return quiz(id,i+1,it);
+        if(st.ok<5)return quiz(id,st);
         done[id]=1;if(id==10)open=1;hud();drawMap();hide();
         say(id==10?"¡La puerta se abre! Corre hacia la profesora":nsec()==3?"¡3 sellos rotos! Ve por el cristal":"¡Sello roto! Sigue con otro camino");
       },1200);
     }else{
-      t.t++;b.disabled=true;b.classList.add("no");
-      $("fb").textContent="¡Sigue explorando! Relee la pista e inténtalo otra vez.";$("fb").style.color="var(--bad)";
+      b.classList.add("no");
+      $("fb").textContent="Esa no era. La respuesta correcta es: «"+d[1]+"». ¡Aprende de ella! Llevas "+st.ok+" de 5 aciertos y viene una pregunta nueva.";$("fb").style.color="var(--bad)";
+      $("fb").insertAdjacentHTML("afterend",'<button class="go" id="nx">Siguiente pregunta</button>');
+      $("nx").onclick=()=>quiz(id,st);$("nx").scrollIntoView({block:"nearest"});
     }
   });
 }
@@ -385,15 +409,40 @@ function fin(){
   })();
 }
 
-const dirs={ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1],ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0]};
-addEventListener("keydown",e=>{const d=dirs[e.key];if(d&&!busy){e.preventDefault();held=d;key=e.key}});
+/* ===== Controles: teclado (PC), clic/toque en el mapa y botones solo en pantallas táctiles ===== */
+const dirs={ArrowUp:[0,-1],w:[0,-1],W:[0,-1],ArrowDown:[0,1],s:[0,1],S:[0,1],ArrowLeft:[-1,0],a:[-1,0],A:[-1,0],ArrowRight:[1,0],d:[1,0],D:[1,0]};
+addEventListener("keydown",e=>{const d=dirs[e.key];if(d&&!busy){e.preventDefault();held=d;key=e.key;tgt=null}});
 addEventListener("keyup",e=>{if(e.key==key)held=null});
+// Si el dispositivo recibe un toque (celular, tablet, portátil táctil), se muestran los botones de flechas
+addEventListener("pointerdown",e=>{if(e.pointerType==="touch"||e.pointerType==="pen")document.body.classList.add("touch")},{capture:true,passive:true});
+addEventListener("touchstart",()=>document.body.classList.add("touch"),{once:true,passive:true});
 document.querySelectorAll("#dpad button").forEach(b=>{
   const d=b.dataset.d.split(",").map(Number);
-  b.addEventListener("pointerdown",e=>{e.preventDefault();held=d;mv(d[0],d[1])});
+  b.addEventListener("pointerdown",e=>{e.preventDefault();tgt=null;held=d;mv(d[0],d[1])});
   ["pointerup","pointerleave","pointercancel"].forEach(t=>b.addEventListener(t,()=>{held=null}));
 });
-setInterval(()=>{if(held)mv(held[0],held[1])},150);
+// Tocar o hacer clic en el mapa: el detective camina hacia ese punto
+cv.addEventListener("pointerdown",e=>{
+  if(busy)return;
+  const r=cv.getBoundingClientRect();
+  tgt=[Math.max(0,Math.min(W-1,Math.floor((e.clientX-r.left)/r.width*W))),Math.max(0,Math.min(H-1,Math.floor((e.clientY-r.top)/r.height*H)))];
+});
+addEventListener("contextmenu",e=>{if(e.target===cv||e.target.closest("#dpad"))e.preventDefault()});
+setInterval(()=>{
+  if(busy){tgt=null;return}
+  if(held){mv(held[0],held[1]);return}
+  if(!tgt||Date.now()<cool)return;
+  const dx=tgt[0]-px,dy=tgt[1]-py;
+  if(!dx&&!dy){tgt=null;return}
+  const sx=Math.sign(dx),sy=Math.sign(dy);
+  const o=Math.abs(dx)>=Math.abs(dy)?[[sx,0],[0,sy]]:[[0,sy],[sx,0]];
+  for(const d of o){
+    if(!d[0]&&!d[1])continue;
+    const ox=px,oy=py;mv(d[0],d[1]);
+    if(px!=ox||py!=oy||busy)return;
+  }
+  tgt=null;
+},150);
 
 $("ttl").append(pixCan("Agencia de detectives del lenguaje",2,"#7fe9ff","#3aa0d9"),pixCan("¡Rescata a la profesora Milena!",3,"#ffd23f","#ff8a2a"));
 paintIcons(document);drawMap();hud();start();tick();
