@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rescate de la profesora Milena</title>
+<!-- FUENTES: "Press Start 2P" (botones, puntajes, encabezados de ventanas) y "VT323" (preguntas y diálogos)
+     se cargan desde Google Fonts (licencia OFL) y necesitan conexión; sin conexión se usa la fuente alternativa
+     monoespaciada. El título, los nombres de los mundos y los avisos usan una fuente pixelada dibujada dentro de este
+     mismo archivo (funciona sin conexión). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e1230;--card:#1c2552;--card2:#141b40;--line:#e0b84f;--gold:#ffd23f;--ok:#3ddc84;--bad:#ff6b6b;--tx:#fff;--fa:"Press Start 2P","Courier New",monospace;--fr:"VT323","Courier New",monospace;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--tx);font-family:var(--fr);font-size:1.4rem;line-height:1.2;background:var(--bg) radial-gradient(2px 2px at 20% 30%,#fff8,transparent),radial-gradient(2px 2px at 70% 20%,#fff8,transparent),radial-gradient(2px 2px at 40% 80%,#fff8,transparent),radial-gradient(2px 2px at 85% 65%,#ffd23faa,transparent);background-size:260px 260px}
+#ttl{margin:8px 6px 4px}
+#ttl canvas,#vt canvas{display:block;margin:5px auto;max-width:100%;height:auto;image-rendering:pixelated}
+#wrap,#bar{width:100%;max-width:640px;margin:0 auto}
+#bar{display:flex;justify-content:space-between;gap:6px;margin-bottom:8px;padding:0 4px}
+.hud{display:flex;align-items:center;gap:6px;font-family:var(--fa);font-size:clamp(.5rem,2.3vw,.65rem);line-height:1.4;background:var(--card2);border:3px solid var(--line);box-shadow:3px 3px 0 #000;padding:6px 8px;color:var(--gold)}
+#nm{color:#fff;max-width:11ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ic{width:22px;height:22px;image-rendering:pixelated;flex:none;vertical-align:middle}
+.pt{width:64px;height:64px;image-rendering:pixelated;border:3px solid var(--line);flex:none;background:#2a3a78}
+canvas#cv{display:block;width:100%;height:auto;border:4px solid var(--line);box-shadow:4px 4px 0 #000;image-rendering:pixelated;background:#222}
+#dpad{display:grid;grid-template-columns:repeat(3,64px);grid-template-rows:repeat(2,56px);gap:6px;justify-content:center;margin:12px auto}
+#dpad button{border:3px solid var(--line);background:var(--card);border-radius:0;box-shadow:3px 3px 0 #000;touch-action:none;padding:0}
+#dpad button:active{background:#37508a;transform:translate(2px,2px);box-shadow:1px 1px 0 #000}
+#dpad .u{grid-column:2}
+.ar{display:block;width:0;height:0;margin:0 auto;border:11px solid transparent}
+.ar.u{border-top:0;border-bottom:18px solid var(--gold)}
+.ar.d{border-bottom:0;border-top:18px solid var(--gold)}
+.ar.l{border-left:0;border-right:18px solid var(--gold)}
+.ar.r{border-right:0;border-left:18px solid var(--gold)}
+.help{text-align:center;font-size:1.2rem;opacity:.9;margin:0 10px 14px}
+#ov{position:fixed;inset:0;background:rgba(6,10,28,.9);display:none;align-items:center;justify-content:center;padding:12px;z-index:5;overflow:auto}
+.box{background:var(--card);border:4px solid var(--line);box-shadow:6px 6px 0 #000;padding:16px;max-width:560px;width:100%;max-height:96vh;overflow:auto}
+.hd{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.hd h2,.box h2{font-family:var(--fa);font-size:.8rem;line-height:1.6;color:var(--gold);margin:0}
+.th,.tx{padding:8px 10px;font-size:1.3rem;line-height:1.2;margin:8px 0}
+.th{background:#16264a;border-left:6px solid var(--gold)}
+.tx{background:#2b1f4a;border-left:6px solid #b28dff}
+.q{font-size:1.65rem;line-height:1.1;margin:12px 0;color:#fff}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:10px 12px;font-family:var(--fr);font-size:1.5rem;line-height:1.1;color:var(--tx);background:#2d4a85;border:3px solid var(--line);border-radius:0;box-shadow:3px 3px 0 #000;cursor:pointer;overflow-wrap:anywhere}
+.opt:hover:not(:disabled){background:#3d62ad}
+.opt:disabled{opacity:.55;cursor:default}
+.opt.ok{background:#1f8f4e;border-color:var(--ok);opacity:1}
+.opt.no{background:#8f2a2a;border-color:var(--bad)}
+.fb{min-height:1.5em;font-size:1.5rem;margin-top:6px}
+.go{display:block;margin:14px auto 0;padding:12px 16px;max-width:100%;font-family:var(--fa);font-size:.7rem;line-height:1.5;white-space:normal;background:var(--gold);color:#241a00;border:3px solid #000;border-radius:0;box-shadow:4px 4px 0 #8a6a00;cursor:pointer}
+.go:active{transform:translate(2px,2px);box-shadow:2px 2px 0 #8a6a00}
+input{width:100%;padding:10px;font-family:var(--fr);font-size:1.7rem;border:3px solid var(--line);border-radius:0;background:#16264a;color:var(--tx);margin:6px 0}
+label{font-size:1.4rem}
+ol{margin:8px 0 0;padding-left:30px;font-family:var(--fa);font-size:.6rem;line-height:2.2}
+.sm{font-size:1.1rem;opacity:.8}
+.big{font-family:var(--fa);font-size:.7rem;line-height:1.8;text-align:center;margin:8px 0}
+#vcv{display:block;width:100%;max-width:320px;height:auto;margin:6px auto;border:4px solid var(--line);image-rendering:pixelated}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+</style>
+</head>
+<body>
+<h1 id="ttl" aria-label="Rescata a la profesora Milena"></h1>
+<div id="bar">
+  <div class="hud"><canvas class="ic" data-k="hero" width="32" height="32"></canvas><span id="nm">Detective</span><span id="pts">0</span>pts<canvas class="ic" data-k="crystal" width="32" height="32"></canvas><span id="pl">0</span>/3</div>
+  <div class="hud"><canvas class="ic" data-k="trophy" width="32" height="32"></canvas>#<span id="rk">1</span>/<span id="rt">1</span></div>
+</div>
+<div id="wrap"><canvas id="cv" width="640" height="448"></canvas></div>
+<div id="dpad" aria-label="Controles">
+  <button class="u" data-d="0,-1" aria-label="Arriba"><i class="ar u"></i></button>
+  <button data-d="-1,0" aria-label="Izquierda" style="grid-row:2"><i class="ar l"></i></button>
+  <button data-d="0,1" aria-label="Abajo" style="grid-row:2"><i class="ar d"></i></button>
+  <button data-d="1,0" aria-label="Derecha" style="grid-row:2"><i class="ar r"></i></button>
+</div>
+<p class="help">Muévete con las flechas, WASD o los botones. Camina contra los personajes para hablar, contra los sellos para responder preguntas y contra las puertas para viajar.</p>
+<div id="ov"><div class="box" id="bx"></div></div>
+
+<script>
+// [reservado, título, pista teórica, fragmento, preguntas "pregunta|correcta|mala|mala"]
+const MS=[
+["","Sello 1: ¿Dónde ocurrió el misterio?","El espacio narrativo es el lugar o conjunto de lugares donde suceden los hechos de una historia. Responde a la pregunta ¿dónde?","Mateo bajó las escaleras del sótano con una linterna. Entre cajas viejas encontró un cofre cubierto de telarañas.",[
+"¿Cuál es el espacio narrativo principal del fragmento?|El sótano|La plaza del pueblo|Un bosque encantado",
+"¿Qué palabras ayudan a imaginar el lugar?|Sótano, cajas viejas y telarañas|Mateo, bajó y encontró|Cofre, linterna y valiente",
+"¿Qué es el espacio narrativo?|El lugar donde suceden los hechos|El momento en que se cuenta la historia|El nombre del personaje principal",
+"¿Qué pregunta responde el espacio narrativo?|¿Dónde?|¿Quiénes?|¿Qué pasa?",
+"«Una sirena llegó a un palacio de coral en el fondo del océano». ¿Cuál es el espacio?|Un palacio de coral en el fondo del océano|Una sirena|Una playa soleada"]],
+["","Sello 2: Clasifica los espacios","Real: existe en el mundo. Imaginario: nace de la imaginación. Abierto: al aire libre. Cerrado: interior. Urbano: de la ciudad. Rural: del campo. ¡Un lugar puede tener varias características!","Un castillo en las nubes, una biblioteca, una playa, una calle y una finca cafetera: cinco lugares para clasificar.",[
+"Un castillo en las nubes es un espacio...|Imaginario|Real|Urbano",
+"Una biblioteca es un espacio...|Cerrado|Abierto|Rural",
+"Una playa es un espacio...|Abierto|Cerrado|Imaginario",
+"Una calle de la ciudad es un espacio...|Urbano|Rural|Imaginario",
+"Una finca cafetera en el campo es un espacio...|Real, rural y abierto|Imaginario, urbano y cerrado|Real, urbano y cerrado"]],
+["","Sello 3: El lugar cambia la historia","El lugar influye en las acciones de los personajes y en el ambiente de la historia.","Versión A: Martina abrió una caja misteriosa en una biblioteca silenciosa y oscura. Versión B: Martina abrió la misma caja en una plaza llena de gente y música.",[
+"¿Qué ambiente produce la biblioteca silenciosa y oscura?|Misterio y tensión|Alegría y fiesta|Diversión y risas",
+"¿Qué ambiente produce la plaza con música?|Alegre y animado|Silencioso y tenebroso|Solitario y triste",
+"¿Qué se concluye al comparar las dos versiones?|El lugar puede cambiar la sensación de la historia|El lugar nunca influye|Solo importan los personajes",
+"En la biblioteca, ¿qué haría Martina probablemente?|Abrir la caja con cuidado y en silencio|Bailar con la multitud|Gritar para llamar a todos",
+"Un espacio bien elegido ayuda a...|Imaginar y comprender la historia|Que no haya personajes|Cambiar el tiempo de la narración"]],
+["","Sello 4: Cómo investigar un fragmento","Detective: busca el ESPACIO (dónde), el PERSONAJE (quién), la ACCIÓN (qué hace) y la RELACIÓN (cómo el lugar crea ambiente).","En el viejo molino del pueblo, Daniela descubrió unas huellas de barro que llevaban hacia una puerta cerrada.",[
+"¿Cuál es el espacio?|El viejo molino del pueblo|Daniela|Las huellas de barro",
+"¿Quién es el personaje?|Daniela|La puerta cerrada|El molino",
+"¿Cuál es la acción?|Descubrió unas huellas de barro|El viejo molino|El pueblo",
+"¿Qué palabras dan pistas sobre el lugar?|Viejo molino del pueblo|Descubrió y llevaban|Daniela y barro",
+"¿Qué crean el molino viejo y la puerta cerrada?|Misterio|Alegría|Una fiesta"]],
+["","Sello 5: El espacio deja huellas","Las palabras que describen el lugar nos ayudan a imaginar el ambiente y explican lo que hacen los personajes.","Cuando entró a la vieja escuela, Camilo sintió frío. Los pupitres estaban rotos, las ventanas sin vidrios y una campana sonaba sola en el patio. De pronto, escuchó pasos y decidió seguirlos con cuidado.",[
+"¿Cuál es el espacio narrativo?|La vieja escuela|Un parque|Un castillo",
+"¿Qué palabras ayudan a imaginarlo?|Pupitres rotos, ventanas sin vidrios, campana|Camilo, frío, pasos|Decidió, seguirlos, cuidado",
+"¿Qué ambiente produce?|Misterio y miedo|Fiesta y alegría|Tranquilidad total",
+"¿Cómo influye el lugar en la acción de Camilo?|Lo hace actuar con cuidado|Lo hace correr de alegría|No influye en nada",
+"¿Cambiaría la sensación si ocurriera en un parque lleno de niños jugando?|Sí, sería más alegre y menos misteriosa|No, sería exactamente igual|No, porque el espacio nunca importa"]],
+["","Sello 6: El archivo de los personajes","Los personajes actúan dentro de un espacio. El lugar elegido debe ser apropiado para la situación.","Un pescador descubre una botella con un mensaje. Una estudiante encuentra una llave bajo su pupitre. Una exploradora observa huellas desconocidas. Un astronauta escucha una señal que viene de una cueva.",[
+"¿Qué espacio es apropiado para el pescador que encuentra la botella?|Una playa o el mar|Un salón de clases|Una biblioteca",
+"¿Y para la estudiante que halla la llave bajo su pupitre?|Un salón de clases|Una selva|Un barco",
+"¿Y para la exploradora que observa huellas desconocidas?|Una selva o montaña|Una cocina|Un teatro",
+"¿Qué espacio imaginario sirve para el astronauta que oye una señal?|Una cueva en un planeta lejano|Una panadería|Una piscina",
+"¿Qué relación hay entre un personaje y el espacio?|Sus acciones suceden dentro de ese lugar|Siempre tienen la misma edad|No tienen ninguna relación"]],
+["","Sello 7: Dos relojes en una historia","Tiempo de los hechos: ¿cuándo sucedieron las acciones dentro de la historia? Tiempo de la narración: ¿desde qué momento se cuentan o recuerdan esos hechos?","«Ahora que soy adulto, recuerdo la tarde en que me perdí en el bosque».",[
+"En la frase, ¿cuál es el tiempo de la narración?|Ahora que soy adulto|La tarde en que me perdí|El bosque",
+"¿Cuál es el tiempo de los hechos?|La tarde en que me perdí en el bosque|Ahora que soy adulto|El futuro",
+"El tiempo de la narración responde a...|¿Desde qué momento se cuentan o recuerdan los hechos?|¿Dónde ocurrió la historia?|¿Quiénes son los personajes?",
+"El tiempo de los hechos responde a...|¿Cuándo sucedieron las acciones dentro de la historia?|¿Desde cuándo se cuenta?|¿Qué lugar es más importante?",
+"El espacio, el tiempo de los hechos y la narración responden a...|¿Dónde?, ¿cuándo? y ¿desde cuándo se cuenta?|¿Quién?, ¿qué? y ¿por qué?|¿Cuánto?, ¿cómo? y ¿con quién?"]],
+["","Sello 8: La máquina del tiempo narrativo","Identifica desde cuándo se cuenta la historia (el momento de la narración) y cuándo ocurrieron los hechos recordados.","«Ahora que soy abuela, todavía recuerdo la noche en que se fue la luz en mi pueblo. Tenía nueve años y estaba con mi hermano en la cocina cuando una vela se apagó. Allí esperamos hasta que amaneció».",[
+"¿Desde qué momento cuenta la narradora lo sucedido?|Desde que es abuela, en el presente|Desde que tenía nueve años|Desde que amaneció",
+"¿Cuándo ocurrieron los hechos?|Una noche, cuando tenía nueve años|Ahora que es abuela|Al amanecer de hoy",
+"¿Qué acontecimiento marcó la historia?|Se fue la luz en el pueblo|Llegó una tormenta|Hubo un viaje",
+"¿En qué espacio sucedió la parte principal?|En la cocina|En un bosque|En una plaza",
+"¿Qué palabra indica el tiempo de la narración?|Ahora|Cocina|Hermano"]]];
+
+const HUB=["TTTTTTTTTTTTTTTTTTTT","T,,,,,,,,,K,,,,,,,,T","T,TT,,,,,..,,,,,TT,T","T,,,,,,,,..,,,,,,,,T","T,,,,R,,,..,,,R,,,,T","T,,1,,,,,.2.,,,,,3,T","T,,,,,,,,..,,,,,,,,T","T,TT,,,.......,,TT,T","T,,,,N,,..,,,N,,,,,T","T,,R,,,,..,,,,R,,,,T","T,,,,,,,,..,,,,,,,,T","T,TT,,,,,..,,,,,TT,T","T..................T","TTTTTTTTTTTTTTTTTTTT"];
+const WLD=["TTTTTTTTTTTTTTTTTTTT","T,,,,TTTTTTTTTTTTTTT","T,,,,.........STTTTT","T,,N,TTTTTTTTTTTTTTT","T,R,,TTTTTTTTTTTTTTT","T,,,,TTTTTTTTTTTTTTT","TE,,,.....S....,,C,T","T,,N,TTTTTTTTTTTTTTT","T,,,RTTTTTTTTTTTTTTT","T,,,,TTTTTTTTTTTTTTT","T,,,,.........STTTTT","T,,N,TTTTTTTTTTTTTTT","T,,,,TTTTTTTTTTTTTTT","TTTTTTTTTTTTTTTTTTTT"];
+const CAS=["TTTTTTTTTTTTTTTTTTTT","T,,,,,,,,,M,,,,,,,,T","TTTTTTTTTTDTTTTTTTTT","T,,,,,,,,,,,,,,,,,,T","T,RR,,,,,,,,,,,,RR,T","T,,,,,TT,,,,TT,,,,,T","T,,,,,TT,,,,TT,,,,,T","T,,,,,,,,,,,,,,,,,,T","T,RR,,,,,,,,,,,,RR,T","T,,,,,,TT,,TT,,,,,,T","T,,,,,,,,,,,,,,,,,,T","T,,,,,,,,,,,,,,,,,,T","T,,,,,,,,,E,,,,,,,,T","TTTTTTTTTTTTTTTTTTTT"];
+const fix=a=>a.map(r=>r.length<20?r.padEnd(20,"T"):r);
+const MAPS={h:fix(HUB),w:fix(WLD),c:fix(CAS)};
+const SK={h:{a:"#5aa33f",b:"#54993a",p:"#d9c48a",d:"#3f7d2c",l:"#78c457",pd:"#b8a26a",w:["tree","pine"],f:1},0:{a:"#3f8a35",b:"#397c30",p:"#c9b27a",d:"#2d6a27",l:"#5aa84a",pd:"#a58f5c",w:["tree","pine","tree"],f:1},1:{a:"#8d8470",b:"#857c68",p:"#c7bb9c",d:"#6d6553",l:"#a79e88",pd:"#a89d7e",w:["pillar","rock"]},2:{a:"#33296a",b:"#2d2460",p:"#6455b8",d:"#231c4d",l:"#5546a0",pd:"#4a3d96",w:["clock","orb"]},c:{a:"#3d3d52",b:"#37374b",p:"#5b5b78",d:"#2a2a3a",l:"#4d4d66",pd:"#47475f",w:["wall"]}};
+const CC=["#5dff9a","#ffd23f","#c48bff"];
+const NP={
+h:[["capitan","Capitán Rodrigo","¡Detective! La profesora Milena fue secuestrada por el Guardián del Olvido y la tiene en su castillo, al norte de la aldea. Solo podrás entrar con los 3 cristales: uno en cada mundo. En cada mundo hay 3 caminos y cada camino guarda un sello que se rompe respondiendo preguntas."],["sofia","Doña Sofía","Los tres portales son: el Bosque de los Lugares (izquierda), las Ruinas del Misterio (centro) y el Valle del Tiempo (derecha). Si no sabes una respuesta, conversa con los habitantes: ellos guardan las pistas. ¡Y lee con atención el «archivo secreto» de cada pregunta, mi niño!"]],
+0:[["hada","Hada Lía","El camino de ARRIBA guarda el sello del ESPACIO NARRATIVO: es el lugar donde suceden los hechos y responde a ¿dónde? ¡Lee bien el fragmento y busca las pistas del lugar!"],["tomas","Guardabosques Tomás","El camino del MEDIO trata de clasificar espacios: real, imaginario, abierto, cerrado, urbano o rural. ¡Un mismo lugar puede ser varias cosas! Cuando rompas los 3 sellos, sigue este camino hasta el cristal."],["ardilla","Ardilla Nina","El camino de ABAJO habla de cómo el lugar cambia la historia: una biblioteca oscura da misterio y una plaza con música da alegría."]],
+1:[["fermin","Fantasma Fermín","El camino de ARRIBA enseña a investigar un fragmento: busca el espacio (dónde), el personaje (quién), la acción (qué hace) y la relación (qué ambiente crea el lugar)."],["buho","Búho Sabio","El camino del MEDIO trata de las huellas del espacio: las palabras que describen el lugar crean el ambiente. Con los 3 sellos rotos, avanza por aquí hasta el cristal."],["olivia","Maga Olivia","El camino de ABAJO pregunta por personajes y espacios: cada personaje actúa dentro de un lugar apropiado para su situación."]],
+2:[["mauro","Relojero Mauro","El camino de ARRIBA guarda dos relojes: el tiempo de los hechos (¿cuándo ocurrió?) y el tiempo de la narración (¿desde cuándo se cuenta o se recuerda?)."],["tictac","Duende Tic-Tac","El camino del MEDIO: en «Ahora que soy adulto, recuerdo…», AHORA es la narración y lo recordado son los hechos. Rompe los 3 sellos y toma el cristal final."],["zorro","Zorro Sabio","El camino de ABAJO es un reto de repaso con preguntas de todos los casos. ¡Tú puedes, detective!"]]};
+const TS=32,W=20,H=14,KEY="detectives_milena_v1",MAXP=6100;
+const cases=[[1,2,3],[4,5,6],[7,8,9]],WN=["Bosque de los Lugares","Ruinas del Misterio","Valle del Tiempo"];
+const cv=document.getElementById("cv"),cx=cv.getContext("2d"),ov=document.getElementById("ov"),bx=document.getElementById("bx");
+const bg=document.createElement("canvas");bg.width=640;bg.height=448;const bc=bg.getContext("2d");
+const $=id=>document.getElementById(id);
+let where="h",wd=0,px=10,py=10,rx=10,ry=10,face="d",ph=0,walk=false,cool=0,held=null,key=null,ban=null;
+let score=0,name="Detective",done={},crys={},open=0,busy=true,toast="",tt=0;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const lb=()=>{try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}};
+const save=e=>{try{const a=lb();a.push(e);a.sort((x,y)=>y.s-x.s);localStorage.setItem(KEY,JSON.stringify(a.slice(0,20)))}catch(e){}};
+const board=()=>{const a=lb().slice(0,8);return a.length?"<ol>"+a.map(e=>`<li>${esc(e.n)} - ${e.s} pts</li>`).join("")+"</ol>":'<p class="sm">Aún no hay puntajes. ¡Sé el primero!</p>'};
+const mapNow=()=>MAPS[where],sk=()=>SK[where=="w"?wd:where],at=(x,y)=>(mapNow()[y]||"")[x];
+const seal=y=>cases[wd][y==2?0:y==6?1:2],nsec=()=>cases[wd].filter(c=>done[c]).length,ncr=()=>Object.keys(crys).length;
+function npcAt(x,y){let i=0;const m=mapNow(),L=NP[where=="w"?wd:where];for(let yy=0;yy<H;yy++)for(let xx=0;xx<W;xx++)if(m[yy][xx]=="N"){if(xx==x&&yy==y)return L[i];i++}}
+
+/* ===== Fuente pixelada propia (5x7), dibujada en el archivo: funciona sin conexión ===== */
+const GL={A:[14,17,17,31,17,17,17],B:[30,17,17,30,17,17,30],C:[14,17,16,16,16,17,14],D:[30,17,17,17,17,17,30],E:[31,16,16,30,16,16,31],F:[31,16,16,30,16,16,16],G:[14,17,16,23,17,17,15],H:[17,17,17,31,17,17,17],I:[14,4,4,4,4,4,14],J:[7,2,2,2,2,18,12],K:[17,18,20,24,20,18,17],L:[16,16,16,16,16,16,31],M:[17,27,21,21,17,17,17],N:[17,25,21,19,17,17,17],O:[14,17,17,17,17,17,14],P:[30,17,17,30,16,16,16],Q:[14,17,17,17,21,18,13],R:[30,17,17,30,20,18,17],S:[15,16,16,14,1,1,30],T:[31,4,4,4,4,4,4],U:[17,17,17,17,17,17,14],V:[17,17,17,17,17,10,4],W:[17,17,17,21,21,27,17],X:[17,17,10,4,10,17,17],Y:[17,17,10,4,4,4,4],Z:[31,1,2,4,8,16,31],0:[14,17,19,21,25,17,14],1:[4,12,4,4,4,4,14],2:[14,17,1,2,4,8,31],3:[30,1,1,14,1,1,30],4:[2,6,10,18,31,2,2],5:[31,16,30,1,1,17,14],6:[6,8,16,30,17,17,14],7:[31,1,2,4,8,8,8],8:[14,17,17,14,17,17,14],9:[14,17,17,15,1,2,12]," ":[0,0,0,0,0,0,0],"!":[4,4,4,4,4,0,4],"¡":[4,0,4,4,4,4,4],"?":[14,17,1,2,4,0,4],"¿":[4,0,4,8,16,17,14],":":[0,4,0,0,0,4,0],".":[0,0,0,0,0,0,4],",":[0,0,0,0,0,4,8],"-":[0,0,0,31,0,0,0],"/":[1,2,2,4,8,8,16]};
+function pxt(c,t,x,y,s,c1,c2,sh="#1b1230"){
+  t=t.toUpperCase().normalize("NFD");let ox=x,pv=x;
+  const dr=(g,gx,gy,fn)=>{for(let r=0;r<7;r++){c.fillStyle=fn(r);for(let k=0;k<5;k++)if(g[r]>>(4-k)&1)c.fillRect(gx+k*s,gy+r*s,s,s)}};
+  for(const ch of t){
+    if(ch=="\u0301"){c.fillStyle=c1;c.fillRect(pv+2*s,y-s,s,s);c.fillRect(pv+3*s,y-2*s,s,s);continue}
+    if(ch=="\u0303"){c.fillStyle=c1;c.fillRect(pv+s,y-s,s,s);c.fillRect(pv+2*s,y-2*s,s,s);c.fillRect(pv+3*s,y-2*s,s,s);c.fillRect(pv+4*s,y-s,s,s);continue}
+    const g=GL[ch]||GL["?"];pv=ox;
+    dr(g,ox+s,y+s,()=>sh);dr(g,ox,y,r=>r<4?c1:c2);ox+=6*s;
+  }
+  return ox-x;
+}
+function pixCan(t,s,c1,c2){const n=t.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").length,k=document.createElement("canvas");k.width=n*6*s+s;k.height=11*s;pxt(k.getContext("2d"),t,0,3*s,s,c1,c2);return k}
+
+/* ===== Primitivas pixel art (cuadrícula de 16x16, cada unidad = 2 px) ===== */
+let g=cx,GX=0,GY=0;
+const R=(x,y,w,h,c)=>{g.fillStyle=c;g.fillRect(GX+x*2,GY+y*2,w*2,h*2)};
+const B=(x,y,w,h,c,o="#1b1230")=>{R(x-1,y-1,w+2,h+2,o);R(x,y,w,h,c)};
+const org=(c,X,Y)=>{g=c;GX=X;GY=Y};
+
+const OB={
+tree:()=>{B(7,9,3,6,"#7a4a21");B(2,2,12,9,"#2f8f3a");R(3,3,4,2,"#56c24e");R(9,7,4,3,"#237a30");R(5,6,2,2,"#3aa545")},
+pine:()=>{B(7,12,3,3,"#7a4a21");B(3,9,10,3,"#1f6f3f");B(4,6,8,3,"#238a4a");B(5,3,6,3,"#2aa058");B(7,1,2,2,"#35b866");R(5,10,2,1,"#34a35a")},
+pillar:()=>{B(3,1,10,3,"#d8cfb8");B(5,4,6,9,"#bdb39c");R(6,5,1,8,"#e2dac6");R(9,7,1,3,"#8f866f");B(2,13,12,2,"#a39a85")},
+rock:()=>{B(2,7,12,7,"#8d8d99");R(3,8,5,2,"#b4b4c0");R(9,11,4,2,"#6c6c78")},
+clock:()=>{B(2,2,12,12,"#c8a63a");R(4,4,8,8,"#f0e6c8");R(8,5,1,4,"#222");R(8,8,3,1,"#222");R(8,8,1,1,"#c33")},
+orb:()=>{B(3,12,10,3,"#5a4a9a");B(4,2,8,10,"#9a7bff");R(6,4,2,3,"#e3d8ff");R(9,8,2,2,"#7a5ad8")},
+wall:()=>{R(0,0,16,16,"#4a4a63");R(0,4,16,1,"#2c2c3f");R(0,9,16,1,"#2c2c3f");R(0,14,16,1,"#2c2c3f");R(3,0,1,4,"#2c2c3f");R(11,5,1,4,"#2c2c3f");R(6,10,1,4,"#2c2c3f");R(1,1,3,1,"#5f5f7d");R(8,6,3,1,"#5f5f7d");R(12,11,3,1,"#5f5f7d")},
+crys:c=>{B(6,2,4,3,c);B(4,5,8,4,c);B(6,9,4,2,c);R(5,6,1,2,"#fff");R(7,3,1,1,"#fff");R(10,7,1,1,"#0003")},
+altar:(c,gl)=>{B(3,11,10,4,"#7a7a90");R(4,12,8,1,"#9a9ab0");if(gl)OB.crys(c);else{R(7,6,1,1,c);R(6,7,3,1,c);R(7,8,1,1,c)}},
+door:()=>{B(2,1,12,14,"#6c6c80");B(4,4,8,11,"#6b3f1c");R(4,4,8,1,"#8a5a2b");R(8,4,1,11,"#4a2a10");R(10,9,1,2,"#ffd23f");R(3,2,10,1,"#8c8ca0")},
+lock:()=>{R(5,3,6,1,"#c0c0c8");R(5,3,1,5,"#c0c0c8");R(10,3,1,5,"#c0c0c8");B(3,7,10,7,"#d4a72c");R(7,9,2,3,"#222");R(4,8,8,1,"#f0c850")},
+check:()=>{[[3,8],[5,10],[7,8],[9,6],[11,4]].forEach(p=>R(p[0]-1,p[1]-1,4,4,"#14532d"));[[3,8],[5,10],[7,8],[9,6],[11,4]].forEach(p=>R(p[0],p[1],2,2,"#3ddc84"))},
+tick:()=>{R(0,0,7,7,"#1b1230");[[1,3],[2,4],[3,3],[4,2],[5,1]].forEach(p=>R(p[0],p[1],1,2,"#3ddc84"))},
+portal:i=>{const C=[["#2f8f3a","#9dff9a"],["#c8a63a","#fff1b0"],["#7a4ad0","#d8c8ff"]][i];B(2,2,12,13,C[0]);R(4,4,8,10,"#120c2a");R(5,5,6,8,C[1]);R(6,6,4,1,C[0]);R(5,8,6,1,C[0]);R(7,10,2,1,C[0]);R(6,7,1,1,"#fff");R(7,1,2,1,"#ffd23f")},
+castle:lk=>{B(1,3,4,12,"#8a8aa6");B(11,3,4,12,"#8a8aa6");B(4,6,8,9,"#9a9ab6");[1,3,11,13].forEach(x=>R(x,1,1,2,"#8a8aa6"));R(7,0,1,6,"#7a4a21");R(8,0,4,2,"#e0453a");B(6,10,4,5,"#3a2312");R(2,6,1,2,"#ffd23f");R(13,6,1,2,"#ffd23f");R(5,8,1,1,"#ffd23f");R(10,8,1,1,"#ffd23f");if(lk){B(6,11,4,3,"#d4a72c");R(7,9,1,2,"#c0c0c8");R(8,9,1,2,"#c0c0c8")}}};
+
+function person(o){
+  const S=o.S||"#f1c27d",H=o.H||"#6b3e1e",hs=o.hs||0,pn=o.pn||"#2f3f86";
+  if(o.wing){B(0,5,4,7,"#d6f0ff","#4aa3d8");B(12,5,4,7,"#d6f0ff","#4aa3d8")}
+  if(o.dress)B(3,8,10,7,o.dress);else{B(5,13,2,2,pn);B(9,13,2,2,pn);R(5,15,3,1,"#3a2312");R(8,15,3,1,"#3a2312");B(4,8,8,5,o.sh)}
+  B(2,9,2,4,o.sh);B(12,9,2,4,o.sh);R(2,12,2,1,S);R(12,12,2,1,S);
+  if(o.x)o.x(1);
+  B(4,2,8,6,S);
+  if(hs!=3){R(4,1,8,2,H);R(4,3,1,2,H);R(11,3,1,2,H)}
+  if(hs==1){R(3,2,1,9,H);R(12,2,1,9,H)}
+  if(hs==2)B(6,0,4,2,H);
+  R(6,4,1,2,"#222");R(9,4,1,2,"#222");R(5,6,1,1,"#ff9aa2");R(10,6,1,1,"#ff9aa2");R(7,6,2,1,"#b5473a");
+  if(o.x)o.x(2);
+}
+const CH={
+hero:()=>person({sh:"#d9363e"}),
+capitan:()=>person({sh:"#1f3a8a",pn:"#1b1b3a",H:"#3a2a1a",x:s=>{if(s==2){B(3,1,10,2,"#1f3a8a");R(3,3,10,1,"#12245c");R(7,1,2,2,"#ffd23f");R(5,6,6,1,"#5a3a1a")}else{R(8,9,1,1,"#ffd23f");R(8,11,1,1,"#ffd23f")}}}),
+sofia:()=>person({dress:"#d6336c",sh:"#2ec4b6",H:"#d9dce6",S:"#f3c9a0",hs:2,x:s=>{if(s==1){R(3,8,10,2,"#2ec4b6");R(5,11,2,2,"#ffd23f");R(9,12,2,2,"#4dabf7");R(7,10,2,1,"#ff9ecb");R(4,13,2,1,"#ffd23f");R(6,8,1,1,"#fff");R(9,8,1,1,"#fff");R(7,9,2,1,"#fff")}else{R(4,5,1,2,"#ffd23f");R(11,5,1,2,"#ffd23f");R(9,0,2,2,"#ff6b9d");R(6,6,4,1,"#b5473a");R(5,5,1,1,"#b5473a");R(10,5,1,1,"#b5473a");R(5,1,2,1,"#fff")}}}),
+hada:()=>person({wing:1,dress:"#43c06b",sh:"#43c06b",H:"#ffe27a",hs:1,x:s=>{if(s==2){R(6,0,4,1,"#ffd23f");R(13,6,1,6,"#7a4a21");B(12,4,3,3,"#fff27a")}}}),
+tomas:()=>person({sh:"#2f7d3b",pn:"#6b4a2a",H:"#5a3a1a",x:s=>{if(s==1)R(7,8,2,5,"#f4e4b8");else{B(3,1,10,2,"#7a4a21");R(2,3,12,1,"#5a3a1a");R(5,6,6,2,"#8a5a2b")}}}),
+olivia:()=>person({dress:"#6a3fc8",sh:"#6a3fc8",H:"#2a1650",hs:1,x:s=>{if(s==2){B(5,0,6,2,"#4a2aa0");B(3,2,10,1,"#4a2aa0");R(7,0,2,1,"#ffd23f");B(13,5,1,10,"#7a4a21");B(12,2,3,3,"#5ee7ff")}}}),
+mauro:()=>person({sh:"#8a5a2b",pn:"#3a2a1a",H:"#cfd3dc",x:s=>{if(s==1)R(7,10,2,2,"#ffd23f");else{R(5,3,3,1,"#333");R(9,3,3,1,"#333");R(8,4,1,1,"#333");R(5,7,6,1,"#fff")}}}),
+tictac:()=>person({sh:"#e8772e",pn:"#2f7d3b",H:"#ff8a2a",x:s=>{if(s==2){B(4,1,8,2,"#2f9e44");B(6,0,4,1,"#2f9e44");R(3,4,1,2,"#f1c27d");R(12,4,1,2,"#f1c27d");R(6,6,4,1,"#b5473a")}}}),
+milena:f=>{person({dress:"#3f8fd9",sh:"#ffd23f",H:"#4a2a1a",hs:1,x:s=>{if(s==2){R(5,3,3,1,"#8a5a2b");R(9,3,3,1,"#8a5a2b");R(8,4,1,1,"#8a5a2b");R(6,6,4,1,"#b5473a");R(5,5,1,1,"#b5473a");R(10,5,1,1,"#b5473a")}else{B(2,10,3,3,"#c0392b");R(3,10,1,3,"#fff")}}});if(f!==true){[0,5,10,15].forEach(x=>R(x,0,1,16,"#9a7bff"));R(0,0,16,1,"#9a7bff");R(0,15,16,1,"#9a7bff")}},
+ardilla:()=>{B(11,4,4,10,"#c8641c");R(12,5,2,3,"#f4a259");B(4,8,7,6,"#c8641c");R(5,10,4,3,"#f4d3a6");B(4,3,7,6,"#c8641c");R(4,1,2,3,"#c8641c");R(9,1,2,3,"#c8641c");R(6,5,1,2,"#222");R(9,5,1,2,"#222");R(7,7,2,1,"#222");R(5,7,1,1,"#ff9aa2");R(10,7,1,1,"#ff9aa2")},
+zorro:()=>{B(11,9,4,5,"#e8772e");R(13,12,2,2,"#fff");B(4,8,8,6,"#e8772e");R(6,10,4,4,"#fff");B(3,2,10,7,"#e8772e");B(3,0,3,3,"#e8772e");B(10,0,3,3,"#e8772e");R(5,6,6,3,"#fff");R(7,8,2,1,"#222");R(5,4,1,2,"#222");R(10,4,1,2,"#222")},
+buho:()=>{B(3,3,10,12,"#8a5a2b");R(3,1,2,3,"#8a5a2b");R(11,1,2,3,"#8a5a2b");R(5,10,6,4,"#d9b38a");B(4,5,3,3,"#fff");B(9,5,3,3,"#fff");R(5,6,1,2,"#222");R(10,6,1,2,"#222");R(7,8,2,2,"#ffb020");R(4,15,3,1,"#ffb020");R(9,15,3,1,"#ffb020")},
+fermin:()=>{B(3,1,10,13,"#eaf6ff","#5aaee8");R(3,12,2,3,"#eaf6ff");R(7,12,2,3,"#eaf6ff");R(11,12,2,3,"#eaf6ff");R(6,5,1,3,"#2a3a7a");R(10,5,1,3,"#2a3a7a");R(7,10,3,1,"#2a3a7a");R(5,9,1,1,"#ffb7c9");R(11,9,1,1,"#ffb7c9");R(4,3,2,1,"#fff")},
+guardian:()=>{B(3,3,10,12,"#2a1650");B(4,1,8,4,"#2a1650");R(5,3,6,5,"#0b0618");R(6,5,1,1,"#ffd23f");R(9,5,1,1,"#ffd23f");R(3,14,10,1,"#6a3fc8");R(5,9,6,1,"#4a2a90");B(14,1,1,14,"#7a4a21");B(13,0,3,3,"#ff6bd6")}};
+const IC={
+crystal:()=>OB.crys("#5ee7ff"),
+star:()=>{[[7,1,2,3],[3,5,10,3],[5,8,6,3],[4,11,3,2],[9,11,3,2]].forEach(a=>R(a[0]-1,a[1]-1,a[2]+2,a[3]+2,"#1b1230"));[[7,1,2,3],[3,5,10,3],[5,8,6,3],[4,11,3,2],[9,11,3,2]].forEach(a=>R(a[0],a[1],a[2],a[3],"#ffd23f"))},
+trophy:()=>{B(2,3,3,4,"#ffd23f");B(11,3,3,4,"#ffd23f");B(4,1,8,7,"#ffd23f");R(5,2,1,4,"#fff1a0");B(7,8,2,3,"#c8861a");B(4,11,8,3,"#c8861a")},
+lupa:()=>{B(2,2,8,8,"#bfe9ff");R(3,3,2,2,"#fff");B(9,9,2,2,"#7a4a21");R(11,11,3,3,"#7a4a21")},
+scroll:()=>{B(3,2,10,12,"#f4e4b8");[5,7,9,11].forEach(y=>R(5,y,6,1,"#b8985a"))},
+siren:()=>{B(4,5,8,8,"#e0453a");R(6,6,2,4,"#ff9a8f");B(3,13,10,2,"#555");R(7,2,2,2,"#ffd23f");R(2,5,1,1,"#ffd23f");R(13,5,1,1,"#ffd23f")},
+castle:()=>OB.castle(0),lock:()=>OB.lock(),check:()=>OB.check()};
+function paintIcons(root){root.querySelectorAll("canvas[data-k]").forEach(c=>{const k=c.dataset.k,x=c.getContext("2d");x.clearRect(0,0,32,32);if(c.classList.contains("pt")){x.fillStyle="#2a3a78";x.fillRect(0,0,32,32)}org(x,0,0);(CH[k]||IC[k])(true)})}
+const icH=k=>`<canvas class="ic" data-k="${k}" width="32" height="32"></canvas>`;
+
+/* ===== Mapa (se dibuja una vez y se guarda en caché) ===== */
+function drawMap(){
+  const m=mapNow(),s=sk();
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+    const c=m[y][x],X=x*TS,Y=y*TS,h=(x*7+y*13+x*y)%11,sp=c=="."||"NSEMKD123C".includes(c);
+    org(bc,X,Y);
+    if(c=="T"&&s.w[0]=="wall"){OB.wall();continue}
+    R(0,0,16,16,sp?s.p:((x+y)%2?s.b:s.a));
+    if(h%3==0)R(2+h%9,3+(h*3)%10,1,1,sp?s.pd:s.d);
+    if(h%4==1)R(11-h%7,2+(h*5)%11,1,1,sp?s.pd:s.l);
+    if(s.f&&h==7&&!sp){R(6,6,1,1,"#ff7a8a");R(7,6,1,1,"#ffd23f")}
+    if(c=="T")OB[s.w[(x*3+y)%s.w.length]]();
+    else if(c=="R")OB.rock();
+    else if(c=="N")CH[npcAt(x,y)[0]]();
+    else if(c=="S")done[seal(y)]?OB.check():OB.lock();
+    else if(c=="C")OB.altar(CC[wd],!crys[wd]);
+    else if(c=="E")OB.door();
+    else if("123".includes(c)){OB.portal(c-1);if(crys[c-1]){org(bc,X+18,Y);OB.tick()}}
+    else if(c=="K")OB.castle(ncr()<3);
+    else if(c=="D"){if(!open)CH.guardian()}
+    else if(c=="M")CH.milena();
+  }
+}
+function doll(){
+  const X=rx*TS+16,Y=ry*TS+30,s=walk?Math.sin(ph)*5:0,B2=walk?-Math.abs(Math.sin(ph))*2:0,T=Y+B2;
+  cx.fillStyle="rgba(0,0,0,.28)";cx.beginPath();cx.ellipse(X,Y,10,4,0,0,7);cx.fill();
+  cx.fillStyle="#2f3f86";cx.fillRect(X-6,Y-10-Math.max(0,s)*.6,5,10);cx.fillRect(X+1,Y-10-Math.max(0,-s)*.6,5,10);
+  cx.fillStyle="#3a2312";cx.fillRect(X-6,Y-2-Math.max(0,s)*.6,5,2);cx.fillRect(X+1,Y-2-Math.max(0,-s)*.6,5,2);
+  cx.fillStyle="#d9363e";cx.fillRect(X-7,T-22,14,13);
+  cx.fillRect(X-10,T-21+s*.4,3,10);cx.fillRect(X+7,T-21-s*.4,3,10);
+  cx.fillStyle="#f1c27d";cx.fillRect(X-10,T-12+s*.4,3,3);cx.fillRect(X+7,T-12-s*.4,3,3);
+  cx.beginPath();cx.arc(X,T-27,8,0,7);cx.fill();
+  cx.fillStyle="#6b3e1e";cx.beginPath();
+  if(face=="u")cx.arc(X,T-27,8.5,0,7);else cx.arc(X,T-28,8.5,Math.PI,0);
+  cx.fill();cx.fillStyle="#222";
+  if(face=="d"){cx.fillRect(X-4,T-26,2,3);cx.fillRect(X+2,T-26,2,3)}
+  else if(face=="l")cx.fillRect(X-5,T-26,2,3);
+  else if(face=="r")cx.fillRect(X+3,T-26,2,3);
+}
+function draw(){
+  cx.drawImage(bg,0,0);doll();
+  if(toast){const w=toast.length*12+16;cx.fillStyle="rgba(10,15,60,.92)";cx.fillRect(320-w/2,404,w,34);pxt(cx,toast,320-w/2+8,414,2,"#ffd23f","#ff9a2a")}
+  if(ban&&Date.now()<ban.u){const w=ban.t.length*18+24;cx.fillStyle="rgba(10,15,60,.9)";cx.fillRect(320-w/2,10,w,48);pxt(cx,ban.t,320-w/2+12,22,3,"#ffd23f","#ff8a2a")}
+}
+function tick(){
+  const dx=px-rx,dy=py-ry,d=Math.hypot(dx,dy);
+  walk=d>.02;
+  if(walk){const st=Math.min(.16,d);rx+=dx/d*st;ry+=dy/d*st;ph+=.5}else{rx=px;ry=py}
+  draw();requestAnimationFrame(tick);
+}
+function hud(){
+  const a=lb(),r=1+a.filter(e=>e.s>score).length;
+  $("nm").textContent=name;$("pts").textContent=score;$("pl").textContent=ncr();$("rk").textContent=r;$("rt").textContent=a.length+1;
+}
+function say(t){toast=t;clearTimeout(tt);tt=setTimeout(()=>{toast=""},2800)}
+function show(h){held=null;bx.innerHTML=h;ov.style.display="flex";busy=true;paintIcons(bx)}
+function hide(){ov.style.display="none";busy=false;cool=Date.now()+450}
+const hdr=(k,t)=>`<div class="hd"><canvas class="pt" data-k="${k}" width="32" height="32"></canvas><h2>${t}</h2></div>`;
+function dlg(k,t,txt,btn,cb){
+  show(hdr(k,t)+`<div class="tx">${txt}</div><button class="go" id="dgo">${btn||"Entendido"}</button>`);
+  $("dgo").onclick=()=>{hide();if(cb)cb()};
+}
+function go(w,x,y,n){where=w;px=rx=x;py=ry=y;drawMap();ban={t:n,u:Date.now()+3200}}
+
+function mv(dx,dy){
+  if(busy||Date.now()<cool)return;
+  face=dx<0?"l":dx>0?"r":dy<0?"u":"d";
+  const nx=px+dx,ny=py+dy,c=at(nx,ny);
+  if(!c||c=="T"||c=="R")return;
+  if(c=="."||c==","||(c=="S"&&done[seal(ny)])||(c=="D"&&open)){px=nx;py=ny;return}
+  inter(c,nx,ny);
+}
+function inter(c,x,y){
+  if(c=="N"){const n=npcAt(x,y);return dlg(n[0],n[1],n[2])}
+  if(c=="E")return where=="w"?go("h",[3,10,17][wd],6,"Aldea de la Agencia"):go("h",10,2,"Aldea de la Agencia");
+  if("123".includes(c)){wd=c-1;return go("w",2,6,WN[wd])}
+  if(c=="K")return ncr()<3?dlg("castle","Castillo del Olvido","Las puertas están selladas. Necesitas los 3 cristales, uno de cada mundo. Tienes "+ncr()+" de 3."):go("c",10,11,"Castillo del Olvido");
+  if(c=="C"){
+    if(crys[wd])return say("Ya tienes este cristal");
+    if(nsec()<3)return dlg("crystal","Cristal protegido","Un hechizo protege el cristal. Rompe los 3 sellos de este mundo ("+nsec()+" de 3). ¡Habla con los habitantes para recibir pistas!");
+    crys[wd]=1;score+=200;hud();drawMap();
+    return dlg("crystal","¡Cristal conseguido!","Ganaste el cristal "+ncr()+" de 3 y +200 puntos. "+(ncr()==3?"¡Ya puedes entrar al Castillo del Olvido! Regresa a la aldea y ve hacia el norte.":"Regresa a la aldea y busca los cristales de los otros mundos."));
+  }
+  if(c=="S")return quiz(seal(y));
+  if(c=="D")return dlg("guardian","Guardián del Olvido","¡Ja, ja, ja! Nadie rescata a la profesora Milena sin pasar mi prueba. Responde 5 preguntas de repaso.","¡Acepto el reto!",()=>quiz(10));
+  if(c=="M")return fin();
+}
+function start(){
+  show(hdr("siren","¡Tenemos un caso urgente!")+`
+  <div class="tx">El Guardián del Olvido secuestró a la profesora Milena y se llevó los lugares de las historias. Para rescatarla debes recorrer 3 mundos, romper sellos respondiendo preguntas sobre el espacio narrativo, el tiempo de los hechos y el tiempo de la narración, y conseguir 3 cristales.</div>
+  <label for="nin">Escribe tu nombre, detective:</label>
+  <input id="nin" maxlength="14" placeholder="Tu nombre" autocomplete="off">
+  <button class="go" id="gob">¡Comenzar la misión!</button>
+  <h2 style="margin-top:16px">Tabla de posiciones</h2>${board()}`);
+  $("gob").onclick=()=>{name=($("nin").value.trim()||"Detective").slice(0,14);score=0;done={};crys={};open=0;face="d";go("h",10,10,"Aldea de la Agencia");hud();hide()};
+  $("nin").onkeydown=e=>{if(e.key=="Enter")$("gob").click()};
+}
+const OKS=["¡Excelente, detective!","¡Muy bien, sigue así!","¡Pista resuelta!","¡Gran observación!","¡Sello roto!"];
+function quiz(id,i=0,it){
+  if(!it){
+    if(id<=8){const m=MS[id-1];it=m[4].map(q=>({q:q.split("|"),f:m[3],h:m[2]}));it.t=m[1]}
+    else{const a=[];MS.forEach(m=>m[4].forEach(q=>a.push({q:q.split("|"),f:m[3],h:m[2]})));a.sort(()=>Math.random()-.5);it=a.slice(0,5);it.t=id==9?"Sello 9: Reto de repaso":"Prueba del Guardián"}
+  }
+  const d=it[i].q,t={t:0};
+  const o=[[d[1],1],[d[2],0],[d[3],0]].sort(()=>Math.random()-.5);
+  show(hdr(id==10?"guardian":id==9?"star":"lock",it.t)+`
+  <div class="th">${icH("lupa")} <b>Archivo secreto:</b> ${it[i].h}</div>
+  <div class="tx">${icH("scroll")} ${it[i].f}</div>
+  <div class="q">Pregunta ${i+1} de 5: ${esc(d[0])}</div>
+  ${o.map((x,k)=>`<button class="opt" data-k="${k}">${esc(x[0])}</button>`).join("")}
+  <div class="fb" id="fb" role="status"></div>`);
+  bx.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    if(o[b.dataset.k][1]){
+      score+=t.t?50:100;hud();
+      bx.querySelectorAll(".opt").forEach(x=>x.disabled=true);b.classList.add("ok");
+      $("fb").textContent=OKS[i];$("fb").style.color="var(--ok)";
+      setTimeout(()=>{
+        if(i<4)return quiz(id,i+1,it);
+        done[id]=1;if(id==10)open=1;hud();drawMap();hide();
+        say(id==10?"¡La puerta se abre! Corre hacia la profesora":nsec()==3?"¡3 sellos rotos! Ve por el cristal":"¡Sello roto! Sigue con otro camino");
+      },1200);
+    }else{
+      t.t++;b.disabled=true;b.classList.add("no");
+      $("fb").textContent="¡Sigue explorando! Relee la pista e inténtalo otra vez.";$("fb").style.color="var(--bad)";
+    }
+  });
+}
+function fin(){
+  score+=500;save({n:name,s:score});hud();
+  const m=score>=5300?"¡Detective legendario!":score>=4200?"¡Detective experto!":"¡Buen trabajo, detective!";
+  show(`<div id="vt"></div><canvas id="vcv" width="320" height="140"></canvas>
+  <div class="tx">«¡Gracias, ${esc(name)}! Recuperaste los lugares perdidos y aprendiste a distinguir el tiempo de la narración del tiempo de los hechos». Profesora Milena</div>
+  <div class="big">${m}<br>${score} de ${MAXP} puntos<br>(incluye 500 por el rescate)</div>
+  <h2>Tabla de posiciones</h2>${board()}
+  <p class="sm">La tabla se guarda en este dispositivo.</p>
+  <button class="go" id="again">Jugar de nuevo</button>`);
+  $("vt").append(pixCan("¡Misión cumplida!",3,"#ffd23f","#ff8a2a"));
+  $("again").onclick=start;
+  const vc=$("vcv"),v=vc.getContext("2d"),cf=Array.from({length:44},()=>({x:Math.random()*320,y:Math.random()*140,c:["#ffd23f","#ff6b9d","#5ee7ff","#7dff7a","#c48bff"][Math.random()*5|0],v:.5+Math.random()*1.5})),st=Array.from({length:24},()=>[Math.random()*320|0,Math.random()*100|0]);
+  let f=0;
+  (function an(){
+    if(!document.body.contains(vc))return;
+    f++;v.fillStyle="#141a46";v.fillRect(0,0,320,140);
+    st.forEach((p,i)=>{v.fillStyle=(f+i*7)%40<20?"#fff":"#8a93d6";v.fillRect(p[0],p[1],2,2)});
+    v.fillStyle="#4f9d3a";v.fillRect(0,112,320,28);v.fillStyle="#3f8a35";for(let k=0;k<320;k+=16)v.fillRect(k,112,8,3);
+    cf.forEach(p=>{p.y+=p.v;if(p.y>140)p.y=-4;p.x+=Math.sin(f/10+p.v)*.6;v.fillStyle=p.c;v.fillRect(p.x|0,p.y|0,3,3)});
+    const b=Math.abs(Math.sin(f/8))*8|0;
+    v.save();v.scale(2,2);org(v,60,26-b);CH.milena(true);org(v,92,26-(8-b));CH.hero();v.restore();
+    for(let k=0;k<3;k++){const a=f/20+k*2.09;org(v,144+Math.cos(a)*62,14+Math.sin(a)*14);OB.crys(CC[k])}
+    requestAnimationFrame(an);
+  })();
+}
+
+const dirs={ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1],ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0]};
+addEventListener("keydown",e=>{const d=dirs[e.key];if(d&&!busy){e.preventDefault();held=d;key=e.key}});
+addEventListener("keyup",e=>{if(e.key==key)held=null});
+document.querySelectorAll("#dpad button").forEach(b=>{
+  const d=b.dataset.d.split(",").map(Number);
+  b.addEventListener("pointerdown",e=>{e.preventDefault();held=d;mv(d[0],d[1])});
+  ["pointerup","pointerleave","pointercancel"].forEach(t=>b.addEventListener(t,()=>{held=null}));
+});
+setInterval(()=>{if(held)mv(held[0],held[1])},150);
+
+$("ttl").append(pixCan("Agencia de detectives del lenguaje",2,"#7fe9ff","#3aa0d9"),pixCan("¡Rescata a la profesora Milena!",3,"#ffd23f","#ff8a2a"));
+paintIcons(document);drawMap();hud();start();tick();
+</script>
+</body>
+</html>
